@@ -100,7 +100,7 @@ process VARIANT_CALL_CLAIR3 {
 		samtools index $asmbl
 		samtools faidx $ref_genome
 		
-		MIN_DEPTH=10   # Bc Bernadette says so
+		MIN_DEPTH=10   # Min to allow progress, trial number
 
 		if [ $params.chemistry == "R10" ]; then
 			MDL_NAME='r1041_e82_400bps_sup_v500'
@@ -198,7 +198,7 @@ process VARIANT_CALL_LONGSHOT {
 		samtools index $asmbl
 		samtools faidx $ref_genome
 
-		MIN_DEPTH=10   # Bc Bernadette says so
+		MIN_DEPTH=10   # Min to allow progress, trial number
 
 		# Run longshot
 		longshot --bam $asmbl \
