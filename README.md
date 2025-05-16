@@ -1,2 +1,2 @@
 # outbreaker
-Nextflow pipeline to detect clonal outbreaks
+Nextflow pipeline to detect clonal outbreaks [WIP}
