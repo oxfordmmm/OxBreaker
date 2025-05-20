@@ -24,7 +24,7 @@ workflow outbreaker {
 	// Main
 	main:
 
-		if ( !params.min_qual ) {
+		if ( params.min_qual == null ) {
 			// No filtering by default
 			// unless otherwise specified
 			min_qual = "0"
@@ -42,7 +42,7 @@ workflow outbreaker {
 		 * above 50% or 90%? 
 		 */
 
-		if ( !params.min_freq ) {
+		if ( params.min_freq == null ) {
 			min_freq = "0.9"
 		} else {
 			min_freq = "$params.min_freq"
