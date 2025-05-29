@@ -12,7 +12,7 @@ def _get_sequence_type(PATH, barcode) -> str:
     """
         Retrieve sequence type given a sample barcode
     """
-    barcode_fname = [f for f in os.listdir(PATH) if barcode.split('.')[0] == f.split('_')[0]]
+    barcode_fname = [f for f in os.listdir(PATH) if barcode.split('.')[0] == f.split('.')[0].strip('_ST')]
     assert len(barcode_fname) == 1
 
     CMD = str('cat ') + PATH + barcode_fname[0] + str(' | cut -f 3')
