@@ -23,6 +23,7 @@ workflow quality_control{
 				 "$params.output/qc")
 
 		PLOT_QC("$params.output/qc",
+			control.qc.collect(),
 			coverage.collect(),
 			"$params.output/qc")
 }
