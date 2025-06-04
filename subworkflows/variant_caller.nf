@@ -1,5 +1,6 @@
 include { VARIANT_CALL_CLAIR3; VARIANT_CALL_LONGSHOT } from '../modules/assembly.nf'
 include { GENERATE_CONSENSUS } from '../modules/phylogeny.nf'
+include { PLOT_SNP_DEPTH_DIST } from '../modules/plot_figures.nf'
 
 
 
@@ -12,17 +13,24 @@ workflow variant_caller {
 		depth
 		depth_asmbl
 		AFthres
+		min_read_number
 
 	// Main
 	main:
 		variants = VARIANT_CALL_CLAIR3(asmbl.join(depth_asmbl),
-					       AFthres, 
+					       AFthres,
+					       min_read_number,
 					       ref_genome,
 					       "$params.output/vcf")
 		//variants = VARIANT_CALL_LONGSHOT(asmbl.join(depth_asmbl),
 		//				 AFthres,
 		//				 ref_genome,
 		//				 "$params.output/vcf")
+
+		variants.vcf.view()
+		PLOT_SNP_DEPTH_DIST(variants.vcf,
+				    "$params.output/depth",
+				    "$params.output/vcf/figures")
 
 		consensus = GENERATE_CONSENSUS(variants.vcf.join(depth).join(depth_asmbl),
 					       asmbl.map{it -> it[1]}, ref_genome,
