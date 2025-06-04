@@ -41,10 +41,11 @@ process DOWNLOAD_FASTA {
 
 	output:
 	tuple val("reference"), path("reference.fa"), emit: genome
+	tuple val("reference"), path("reference.log"), emit: log
 
 	script:
 	"""
-		python3 $params.bin/download_reference.py $kraken2_report
+		python3 $params.bin/download_reference.py $kraken2_report > reference.log
 
 		# Unzip
 		gunzip reference.fna.gz
