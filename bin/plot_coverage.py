@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 SAMPLE_ID = 0
 LENGTH_ID = 2
 DEPTH_ID = 4
-COV1X_ID = 7
-COV10X_ID = 8
+COV1X_ID = 8
+COV10X_ID = 9
 
 
 def _sort_data(LABELS: list, LENGTH: list, DEPTH: list,
