@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import sys
 import os
+import subprocess
 from Bio import SeqIO
 from io import StringIO
-from Bio.Blast.Applications import NcbiblastnCommandline as blastn
 import numpy as np
 
 
@@ -89,14 +89,25 @@ def Make_Repeat_Mask_Txt(outfastapath: str, prefix: str, word_size=17, window_si
 	maskpath = prefix + '_repmask.array'
 	regionspath = prefix + '_repregions.array'
 	statspath = prefix + '.stats'
-	
-	blastn_cline = blastn(cmd="blastn", db=prefix, query=outfastapath,
-		                  dust='no', word_size=word_size, window_size=window_size, gapopen=gapopen, gapextend=gapextend, evalue=e_thresh,
-		                  perc_identity=perc_identity, num_threads=threads,
-		                  outfmt='"6 qseqid sseqid pident length qstart qend sstart send"')
-	try:
-		blast_out, blast_err = blastn_cline()
-		assert not blast_err
+
+    # BLAST cmd line argument
+    blast_cmd = list(["blastn",
+                      "-query", outfastapath,
+                      "-db", "reference_db",
+                      "-evalue", str(e_thresh),
+                      "-word_size", str(word_size),
+                      "-window_size", str(window_size),
+                      "-num_threads", str(threads),
+                      "-gapopen", str(gapopen),
+                      "-gapextend", str(gapextend),
+                      "-dust", "yes",
+                      "-perc_identity", str(perc_identity),
+                      "-outfmt", "6 qseqid sseqid pident length qstart qend sstart send"
+                  ])
+    try:
+        blast_out, blast_err = subprocess.Popen(blast_cmd, stdout=subprocess.PIPE,
+                                                stderr=subprocess.PIPE).communicate()
+    assert not blast_err.decode()
 	except (AppError, AssertionError) as err:
 		raise Exception(
 		    'Erro: Blast failed during construction of repeat mask : {0}'.format(err))
@@ -108,7 +119,7 @@ def Make_Repeat_Mask_Txt(outfastapath: str, prefix: str, word_size=17, window_si
 	num_regions = 0
 	
 	# each blast_rec is result from one query sequence (contig)
-	blast_stream = StringIO(blast_out)
+	blast_stream = StringIO(blast_out.decode())
 	prev_header = None
 	for contig_count, contig in enumerate(SeqIO.parse(outfastapath, 'fasta'), 1):
 		if prev_header != contig.name:
