@@ -102,7 +102,7 @@ def Make_Repeat_Mask_Txt(outfastapath: str, prefix: str, word_size=17, window_si
                       "-gapextend", str(gapextend),
                       "-dust", "yes",
                       "-perc_identity", str(perc_identity),
-                      "-outfmt", "6 qseqid sseqid pident length qstart qend sstart send"
+                      "-outfmt", '"6 qseqid sseqid pident length qstart qend sstart send"'
                   ])
     try:
         blast_out, blast_err = subprocess.Popen(blast_cmd, stdout=subprocess.PIPE,
